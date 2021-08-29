@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 3001;
 //To instantiate the server
 const app = express();
 
+//Express.js middleware
+app.use(express.static('public'));
+
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
@@ -138,6 +141,34 @@ app.get('/api/animals/:id', (req, res) => {
       const animal = createNewAnimal(req.body, animals);
       res.json(animal);
     }
+  });
+  //index html Route
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+  
+  // animal html Route
+  app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+    fetch(queryUrl)
+  .then(response => {
+    if (!response.ok) {
+      return alert('Error: ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(animalData => {
+    console.log(animalData);
+    printResults(animalData);
+  });
+  });
+  // Zoo keeper html route
+  app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+  });
+  // Wildcard route
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
   });
 
 // Chain the listen() method onto our server
