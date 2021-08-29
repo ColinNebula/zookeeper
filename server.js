@@ -1,17 +1,34 @@
 const express = require('express');
 // Create a route
 const { animals } = require('./data/animals');
+const PORT = process.env.PORT || 3001;
 
 //To instantiate the server
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+// Get ID route 
+app.get('/api/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
+});
+
+// Get query route
 app.get('/api/animals', (req, res) => {
     let results = animals;
     if (req.query) {
         results = filterByQuery(req.query, results);
       }
       res.json(results);
+  });
+
+  // Create a new GET route for animals
+  app.get('/api/animals/:id', (req, res) => {
+    const result = findById(req.params.id, animals);
+      res.json(result);
   });
 
   function filterByQuery(query, animalsArray) {
